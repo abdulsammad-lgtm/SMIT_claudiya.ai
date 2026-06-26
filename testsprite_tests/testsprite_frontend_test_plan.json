@@ -1,0 +1,523 @@
+[
+  {
+    "id": "TC001",
+    "title": "Real-time dashboard loads with live metrics",
+    "description": "This test verifies that the main dashboard opens successfully and shows the live operational metrics and activity views needed for fraud monitoring.",
+    "category": "Real-time dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify KPI metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify live threat activity is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Dashboard updates with refreshed activity",
+    "description": "This test verifies that the dashboard reflects ongoing live updates in its metrics and transaction activity views.",
+    "category": "Real-time dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify live KPI metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the transaction activity list is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Search narrows dashboard transactions",
+    "description": "This test verifies that a user can search the dashboard for a transaction and see only matching results with their risk details.",
+    "category": "Transaction search and filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Activate search using the keyboard shortcut"
+      },
+      {
+        "type": "action",
+        "description": "Enter an order identifier into the search field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching transaction results are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify transaction risk signals are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Search supports different transaction attributes",
+    "description": "This test verifies that searching by a customer identifier, decision, or amount narrows the transaction list to relevant matches.",
+    "category": "Transaction search and filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Activate search using the keyboard shortcut"
+      },
+      {
+        "type": "action",
+        "description": "Enter a customer identifier into the search field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify filtered transaction results are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the matching decision or amount is reflected in the results"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Generate and score sample transactions",
+    "description": "This verifies an admin can generate sample transactions and run them through scoring so results are available for review.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate sample transactions and score them through all agents"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the generated transactions have risk scores and decisions available"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify agent breakdown details are available for the generated transactions"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Review pipeline stages for a transaction",
+    "description": "This test verifies that a user can open the pipeline progress view for a transaction and see stage-by-stage scoring details.",
+    "category": "Pipeline progress and audit visibility",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /progress"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify pipeline stage progression is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a transaction audit timeline is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Orchestrator agent page shows fusion logic details",
+    "description": "This test verifies that the orchestrator agent detail page opens and presents the scoring and routing information needed for review.",
+    "category": "Agent detail views",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /agents/orchestrator"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify fusion logic details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify policy routing details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Inspect per-agent contribution and timing",
+    "description": "This test verifies that a user can compare agent contribution and timing information within the pipeline progress view.",
+    "category": "Pipeline progress and audit visibility",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /progress"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify per-agent contribution details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify per-agent timing details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Generate a batch of sample transactions",
+    "description": "This verifies an admin can create a new batch of sample transactions and see them added to the system.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate a batch of sample transactions using a chosen pattern"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new sample transactions are visible in the system"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Behavior agent page shows telemetry and scoring metrics",
+    "description": "This test verifies that the behavior agent detail page opens and presents session telemetry and behavior scoring information.",
+    "category": "Agent detail views",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /agents/behavior"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify session telemetry details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify behavior scoring metrics are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Review audit events for a transaction",
+    "description": "This test verifies that a user can inspect the audit event history associated with a transaction in the progress view.",
+    "category": "Pipeline progress and audit visibility",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /progress"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a transaction audit timeline is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify audit event details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Device agent page shows fingerprinting and trust signals",
+    "description": "This test verifies that the device agent detail page opens and presents device fingerprinting and trust verdict information.",
+    "category": "Agent detail views",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /agents/device"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify device fingerprinting signals are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify device trust verdict details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "See generated transactions in the live dashboard",
+    "description": "This verifies newly generated transactions appear in the live dashboard after generation.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate a batch of sample transactions using a chosen pattern"
+      },
+      {
+        "type": "action",
+        "description": "Open the live dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the newly generated transactions are visible in the transaction list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Log in to access protected views",
+    "description": "This test verifies that an authenticated user can sign in and reach the protected application area.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth"
+      },
+      {
+        "type": "action",
+        "description": "Enter {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Enter {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the authenticated session state is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the protected area is available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC015",
+    "title": "Generate and score transactions for full review",
+    "description": "This verifies sample generation with scoring produces transactions that can be reviewed for operational fraud analysis.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate sample transactions and score them through all agents"
+      },
+      {
+        "type": "action",
+        "description": "Open the live dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify scored transactions are visible in the transaction list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the transaction results include decision information"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC016",
+    "title": "Clearing search restores the default transaction list",
+    "description": "This test verifies that removing a search query returns the dashboard to its full default transaction list.",
+    "category": "Transaction search and filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Activate search using the keyboard shortcut"
+      },
+      {
+        "type": "action",
+        "description": "Enter a search query into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Clear the search query"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the default transaction list is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "Generate sample transactions and inspect policy impact",
+    "description": "This verifies generated transactions are available for downstream review of scoring and policy-driven outcomes.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate a batch of sample transactions using a chosen pattern"
+      },
+      {
+        "type": "action",
+        "description": "Generate and score sample transactions through all agents"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the generated transactions are available for review with scoring results"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "Open the current user profile",
+    "description": "This test verifies that a signed-in user can open the current user profile view and see their account details.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth"
+      },
+      {
+        "type": "action",
+        "description": "Enter {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Enter {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the current user profile view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the logged-in user details are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Generate transactions with a different pattern",
+    "description": "This verifies an admin can choose an alternate sample pattern and still create transactions successfully.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate a batch of sample transactions using a different pattern"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the generated transactions are visible in the system"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Generate a second batch after the first",
+    "description": "This verifies an admin can create more than one batch of sample transactions in a session and see the latest batch added.",
+    "category": "Transaction data generation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Generate a batch of sample transactions using a chosen pattern"
+      },
+      {
+        "type": "action",
+        "description": "Generate another batch of sample transactions using a chosen pattern"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify both generated batches are visible in the system"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Register a new account",
+    "description": "This test verifies that a user can submit the registration form and see confirmation that the account was created.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid email address into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid password into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify account creation confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  }
+]

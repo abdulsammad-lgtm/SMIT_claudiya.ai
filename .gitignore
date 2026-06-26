@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+*.txt
+!requirements.txt
+!opencode.json
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Supabase temp
+supabase/.temp/
+
+# TestSprite
+testsprite_tests/tmp/
+testsprite_in.bin
+testsprite_files/
+
+# OS
+.DS_Store
+Thumbs.db

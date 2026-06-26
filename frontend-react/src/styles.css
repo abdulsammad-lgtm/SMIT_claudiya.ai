@@ -1,0 +1,231 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Claudiya.ai — Multi-Agent Fraud Detection System
+ * Black & Gold luxury aesthetic.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Black & Gold luxury canvas */
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0a0a0a;
+  --card-foreground: #f5f5f5;
+  --popover: #0a0a0a;
+  --popover-foreground: #f5f5f5;
+
+  /* Gold primary */
+  --primary: #ffd000;
+  --primary-foreground: #000000;
+
+  --secondary: #1a1a1a;
+  --secondary-foreground: #f0f0f0;
+  --muted: #121212;
+  --muted-foreground: #888888;
+  --accent: #990000;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ff0000;
+  --destructive-foreground: #ffffff;
+
+  --success: #22c55e;
+  --warning: #ffd000;
+  --danger: #ff0000;
+  --info: #666666;
+
+  --border: #222222;
+  --input: #1a1a1a;
+  --ring: #ffd000;
+
+  --chart-1: #ffd000;
+  --chart-2: #990000;
+  --chart-3: #ff0000;
+  --chart-4: #f5edde;
+  --chart-5: #ffffff;
+
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffd000;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #222222;
+  --sidebar-ring: #ffd000;
+
+  /* Custom design tokens */
+  --gradient-primary: linear-gradient(135deg, #ffd000, #b8960f);
+  --gradient-danger: linear-gradient(135deg, #ff0000, #990000);
+  --gradient-success: linear-gradient(135deg, #22c55e, #ffd000);
+  --gradient-surface: linear-gradient(180deg, #0a0a0a, #000000);
+  --shadow-glow: 0 0 32px -8px rgba(255, 208, 0, 0.35);
+  --shadow-danger: 0 0 32px -8px rgba(255, 0, 0, 0.55);
+  --grid-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark {
+  /* same as root — app is dark-first */
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}
+@utility font-mono-tech {
+  font-family: var(--font-mono);
+  font-feature-settings: "zero", "ss01";
+}
+
+@utility surface-card {
+  background: var(--gradient-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+@utility glow-primary {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility text-gradient-primary {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility scanline {
+  position: relative;
+  overflow: hidden;
+}
+@utility scanline-after {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent, rgba(255, 208, 0, 0.06), transparent);
+    transform: translateY(-100%);
+    animation: scan 3.5s linear infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 208, 0, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 208, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 208, 0, 0); }
+}
+
+@keyframes pulse-ring-danger {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(255, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes ticker {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-12px); opacity: 0; }
+}
+
+@utility pulse-dot {
+  animation: pulse-ring 2s infinite;
+}
+@utility pulse-dot-danger {
+  animation: pulse-ring-danger 2s infinite;
+}
+
+@utility shimmer-bar {
+  background: linear-gradient(90deg, transparent, rgba(255, 208, 0, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
