@@ -4,6 +4,7 @@ from datetime import timezone
 from typing import Optional
 
 from agents import Agent, function_tool, Runner
+from sqlalchemy import select
 
 from app.api.schemas import AgentScoreOutput
 from app.db.models import async_session, Transaction
@@ -82,11 +83,29 @@ async def check_user_agent_consistency(user_agent: str, customer_id: str) -> dic
     return await _check_user_agent_consistency(user_agent, customer_id)
 
 
+async def get_device_enrichment(txn: Transaction) -> dict:
+    """Returns IP enrichment data: ip_country, is_vpn, is_proxy.
+    This can be called by the orchestrator before running other agents."""
+    geo = await _check_ip_geolocation_mismatch(txn.ip_address, txn.shipping_address)
+    proxy = await _check_proxy_vpn(txn.ip_address)
+    region = geo.get("region", "US-Unknown")
+    ip_country = region.split("-")[1] if "-" in region else "US"
+    is_vpn = bool(proxy.get("is_proxy_or_vpn"))
+    is_proxy = bool(proxy.get("is_proxy_or_vpn"))
+    return {"ip_country": ip_country, "is_vpn": is_vpn, "is_proxy": is_proxy}
+
+
 async def fast_path_device(txn: Transaction) -> AgentScoreOutput:
     reuse = await _check_device_fingerprint_reuse(txn.device_fingerprint, txn.customer_id)
     geo = await _check_ip_geolocation_mismatch(txn.ip_address, txn.shipping_address)
     proxy = await _check_proxy_vpn(txn.ip_address)
     ua = await _check_user_agent_consistency(txn.user_agent, txn.customer_id)
+
+    enrichment = await get_device_enrichment(txn)
+    txn.device_ip_country = enrichment["ip_country"]
+    txn.device_is_vpn = 1 if enrichment["is_vpn"] else 0
+    txn.device_is_proxy = 1 if enrichment["is_proxy"] else 0
+    txn.device_enriched = 1
 
     scores = []
     reasons = []

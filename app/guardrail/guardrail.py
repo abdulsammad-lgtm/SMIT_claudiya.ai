@@ -49,8 +49,17 @@ async def apply_guardrails(
         "decision": "approve",
     }
 
+    has_hard_block = any(
+        "hard_block" in (e or "")
+        for raw in agent_raw.values()
+        for e in raw.get("evidence", [])
+    )
+
     # Decision thresholds
-    if raw_risk < RISK_THRESHOLDS["approve_upper"]:
+    if raw_risk >= 100 or has_hard_block:
+        result["decision"] = "decline"
+        result["guardrail_applied"] = True
+    elif raw_risk < RISK_THRESHOLDS["approve_upper"]:
         result["decision"] = "approve"
     elif raw_risk > RISK_THRESHOLDS["review_upper"]:
         result["decision"] = "decline"

@@ -25,6 +25,8 @@ from app.api.routes import router
 from app.api.auth_routes import router as auth_router
 from app.api.ws import router as ws_router
 from app.cache.redis_client import close_redis
+from app.ml.model_inference import load_model
+from app.ml.shap_explainer import load_explainer
 
 settings = get_settings()
 
@@ -33,6 +35,8 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     await init_db()
     await seed_database()
+    load_model()
+    load_explainer()
     yield
     await close_redis()
 

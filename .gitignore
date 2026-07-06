@@ -5,15 +5,21 @@ __pycache__/
 .venv/
 venv/
 *.egg-info/
+*.egg
 dist/
 *.db
 *.sqlite3
+.mypy_cache/
+.pytest_cache/
+pip-log.txt
 
 # Logs
 *.log
 *.txt
 !requirements.txt
-!opencode.json
+
+# Session logs
+session-*.md
 
 # IDE
 .vscode/
@@ -33,6 +39,10 @@ supabase/.temp/
 testsprite_tests/tmp/
 testsprite_in.bin
 testsprite_files/
+
+# Coverage
+.coverage
+htmlcov/
 
 # OS
 .DS_Store

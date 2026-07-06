@@ -60,6 +60,17 @@ class Transaction(Base):
     user_agent = Column(String, nullable=False)
     session_duration_seconds = Column(Float, nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    card_bin = Column(String, default="")
+    card_last4 = Column(String, default="")
+    cvv_provided = Column(Integer, default=0)
+    avs_result = Column(String, default="U")
+    billing_address = Column(Text, default="")
+    billing_country = Column(String, default="")
+    billing_zip = Column(String, default="")
+    shipping_country = Column(String, default="")
+    shipping_zip = Column(String, default="")
+    merchant_id = Column(String, default="")
+    merchant_category = Column(String, default="default")
 
     decision = Column(String, default="pending")
     risk_score = Column(Float, nullable=True)
@@ -68,6 +79,10 @@ class Transaction(Base):
     reason_codes_json = Column(Text, nullable=True)
     latency_ms = Column(Float, nullable=True)
     scoring_path = Column(String, default="fast")
+    device_ip_country = Column(String, nullable=True)
+    device_is_vpn = Column(Integer, nullable=True)
+    device_is_proxy = Column(Integer, nullable=True)
+    device_enriched = Column(Integer, default=0)
     overridden = Column(Integer, default=0)
     override_decision = Column(String, nullable=True)
     override_by = Column(String, nullable=True)
@@ -95,6 +110,37 @@ class User(Base):
     role = Column(String, default="analyst")
     disabled = Column(Boolean, default=False)
     api_key = Column(String, unique=True, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    trust_tier = Column(String, default="standard")
+    total_orders = Column(Integer, default=0)
+    return_count = Column(Integer, default=0)
+
+
+class Chargeback(Base):
+    __tablename__ = "chargebacks"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String, nullable=False, index=True)
+    order_id = Column(String, nullable=False)
+    amount = Column(Float, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class FraudLabel(Base):
+    __tablename__ = "fraud_labels"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    transaction_id = Column(String, nullable=False, index=True)
+    label = Column(String, nullable=False)
+    source = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class BINCache(Base):
+    __tablename__ = "bin_cache"
+
+    bin = Column(String, primary_key=True)
+    data_json = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 

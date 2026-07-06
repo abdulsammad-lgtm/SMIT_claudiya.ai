@@ -1,0 +1,40 @@
+{
+  "version": "v1",
+  "trained_at": "2026-06-15T09:36:22.338694",
+  "n_features": 25,
+  "feature_names": [
+    "amount",
+    "amount_log",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "card_velocity_count",
+    "ip_velocity_count",
+    "user_velocity_count",
+    "avs_code_encoded",
+    "cvv_missing",
+    "billing_shipping_country_match",
+    "billing_shipping_zip_match",
+    "is_freight_forwarder",
+    "bin_country_match",
+    "is_vpn",
+    "is_proxy",
+    "is_prepaid_card",
+    "merchant_risk_multiplier",
+    "account_age_days",
+    "chargeback_count_90d",
+    "return_rate",
+    "total_orders",
+    "is_new_account",
+    "amount_vs_user_avg_ratio",
+    "is_micro_transaction"
+  ],
+  "model_file": "xgboost_fraud_v1.pkl",
+  "explainer_file": "shap_explainer_v1.pkl",
+  "metrics": {
+    "train_auc": 0.8601,
+    "source": "ieee-cis"
+  },
+  "model_format": "xgboost_save_model",
+  "xgboost_version_saved": "3.3.0"
+}

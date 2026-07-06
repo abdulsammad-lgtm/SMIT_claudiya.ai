@@ -6,7 +6,7 @@ from agents import Runner
 
 from app.api.schemas import TransactionDecision, AgentScoreOutput, TransactionIn
 from app.db.models import async_session, Transaction, AuditLog, DecisionEnum
-from app.agents.device_agent import fast_path_device, device_agent
+from app.agents.device_agent import fast_path_device, device_agent, get_device_enrichment
 from app.agents.behavior_agent import fast_path_behavior, behavior_agent
 from app.agents.network_agent import fast_path_network, network_agent
 from app.agents.transaction_agent import fast_path_transaction, transaction_agent
@@ -31,6 +31,8 @@ async def score_transaction(txn_in: TransactionIn, use_reasoning: bool = False) 
     txn = await _get_or_create_txn(txn_in)
     agent_raw = {}
 
+    enrichment = await get_device_enrichment(txn)
+
     if use_reasoning:
         input_text = f"Score transaction {txn.order_id}"
         tasks = [
@@ -45,7 +47,12 @@ async def score_transaction(txn_in: TransactionIn, use_reasoning: bool = False) 
         device_score = await fast_path_device(txn)
         behavior_score = await fast_path_behavior(txn)
         network_score = await fast_path_network(txn)
-        transaction_score = await fast_path_transaction(txn)
+        transaction_score = await fast_path_transaction(
+            txn,
+            ip_country=enrichment.get("ip_country", ""),
+            is_vpn=enrichment.get("is_vpn", False),
+            is_proxy=enrichment.get("is_proxy", False),
+        )
         behavioral_score = await fast_path_behavioral(txn)
 
     agent_raw["device"] = device_score.model_dump()
@@ -62,14 +69,26 @@ async def score_transaction(txn_in: TransactionIn, use_reasoning: bool = False) 
         "behavioral": behavioral_score.score,
     }
 
-    weighted = (
-        FAST_PATH_WEIGHTS["device"] * device_score.score
-        + FAST_PATH_WEIGHTS["behavior"] * behavior_score.score
-        + FAST_PATH_WEIGHTS["network"] * network_score.score
-        + FAST_PATH_WEIGHTS["transaction"] * transaction_score.score
-        + FAST_PATH_WEIGHTS["behavioral"] * behavioral_score.score
+    all_evidence = (
+        (device_score.evidence or [])
+        + (behavior_score.evidence or [])
+        + (network_score.evidence or [])
+        + (transaction_score.evidence or [])
+        + (behavioral_score.evidence or [])
     )
-    raw_risk = min(100.0, max(0.0, weighted))
+    has_hard_block = any("hard_block" in (e or "") for e in all_evidence)
+
+    if has_hard_block:
+        raw_risk = max(agent_scores.values())
+    else:
+        weighted = (
+            FAST_PATH_WEIGHTS["device"] * device_score.score
+            + FAST_PATH_WEIGHTS["behavior"] * behavior_score.score
+            + FAST_PATH_WEIGHTS["network"] * network_score.score
+            + FAST_PATH_WEIGHTS["transaction"] * transaction_score.score
+            + FAST_PATH_WEIGHTS["behavioral"] * behavioral_score.score
+        )
+        raw_risk = min(100.0, max(0.0, weighted))
 
     confidence = min(
         1.0,
@@ -117,6 +136,17 @@ async def _get_or_create_txn(txn_in: TransactionIn) -> Transaction:
         )
         existing = result.scalar_one_or_none()
         if existing:
+            existing.card_bin = txn_in.card_bin or existing.card_bin
+            existing.card_last4 = txn_in.card_last4 or existing.card_last4
+            existing.cvv_provided = txn_in.cvv_provided
+            existing.avs_result = txn_in.avs_result or existing.avs_result
+            existing.billing_address = txn_in.billing_address or existing.billing_address
+            existing.billing_country = txn_in.billing_country or existing.billing_country
+            existing.billing_zip = txn_in.billing_zip or existing.billing_zip
+            existing.shipping_country = txn_in.shipping_country or existing.shipping_country
+            existing.shipping_zip = txn_in.shipping_zip or existing.shipping_zip
+            existing.merchant_id = txn_in.merchant_id or existing.merchant_id
+            existing.merchant_category = txn_in.merchant_category or existing.merchant_category
             return existing
         txn = Transaction(
             order_id=txn_in.order_id,
@@ -131,6 +161,17 @@ async def _get_or_create_txn(txn_in: TransactionIn) -> Transaction:
             user_agent=txn_in.user_agent,
             session_duration_seconds=txn_in.session_duration_seconds,
             timestamp=txn_in.timestamp,
+            card_bin=txn_in.card_bin or "",
+            card_last4=txn_in.card_last4 or "",
+            cvv_provided=txn_in.cvv_provided,
+            avs_result=txn_in.avs_result,
+            billing_address=txn_in.billing_address or "",
+            billing_country=txn_in.billing_country or "",
+            billing_zip=txn_in.billing_zip or "",
+            shipping_country=txn_in.shipping_country or "",
+            shipping_zip=txn_in.shipping_zip or "",
+            merchant_id=txn_in.merchant_id or "",
+            merchant_category=txn_in.merchant_category or "",
         )
         session.add(txn)
         await session.commit()

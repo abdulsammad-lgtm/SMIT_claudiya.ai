@@ -6,6 +6,150 @@ from agents import function_tool
 from app.db.models import async_session, Transaction
 from sqlalchemy import select
 
+# ─────────────────────────────────────────────────────────────────
+# LAYER 1 — HARD BLOCK THRESHOLDS
+# These trigger an immediate score=100 block. ML is not called.
+# ─────────────────────────────────────────────────────────────────
+
+HARD_BLOCK_RULES = {
+    "card_testing": {
+        "micro_amount": 1.00,
+        "micro_count": 2,
+        "window_seconds": 120,
+        "spike_ratio": 50,
+    },
+    "extreme_velocity": {
+        "card_max_attempts": 8,
+        "window_seconds": 300,
+    },
+    "cvv_and_avs_combined": {
+        "requires_cvv_missing": True,
+        "requires_avs_code": "N",
+    },
+}
+
+# ─────────────────────────────────────────────────────────────────
+# LAYER 2 — SOFT RULE THRESHOLDS (become ML features)
+# ─────────────────────────────────────────────────────────────────
+
+SOFT_VELOCITY_THRESHOLDS = {
+    "card": {"max_attempts": 3, "window_seconds": 600},
+    "ip": {"max_attempts": 5, "window_seconds": 300},
+    "user": {"max_attempts": 4, "window_seconds": 3600},
+}
+
+AVS_SCORE_MAP = {
+    "Y": 0,
+    "A": 1,
+    "Z": 2,
+    "N": 3,
+    "U": 1,
+    "E": 1,
+    "S": 1,
+}
+
+MERCHANT_RISK_MULTIPLIERS = {
+    "gift_cards":   1.8,
+    "crypto":       1.7,
+    "electronics":  1.4,
+    "jewelry":      1.3,
+    "luxury_goods": 1.3,
+    "gaming":       1.2,
+    "clothing":     1.0,
+    "home_goods":   0.9,
+    "books":        0.7,
+    "groceries":    0.6,
+    "utilities":    0.4,
+    "default":      1.0,
+}
+
+HIGH_RISK_MERCHANT_THRESHOLD = 1.3
+
+KNOWN_FREIGHT_FORWARDER_ZIPS = {
+    "33166", "33126", "33172",
+    "10001", "11101",
+    "90220",
+    "77032",
+    "19720",
+}
+
+KNOWN_FREIGHT_FORWARDER_KEYWORDS = [
+    "freight", "forwarder", "forwarding", "reshipping",
+    "pmb", "mailbox", "mailboxes etc", "ups store",
+    "pak mail", "mailstop",
+]
+
+BIN_CONFIG = {
+    "vpn_geo_weight_multiplier": 0.5,
+    "prepaid_high_value_threshold": 100.0,
+}
+
+CHARGEBACK_CONFIG = {
+    "lookback_days": 90,
+    "high_return_rate_threshold": 0.40,
+}
+
+NEW_ACCOUNT_CONFIG = {
+    "age_days_threshold": 7,
+    "high_value_threshold": 200.0,
+}
+
+ML_FEATURE_NAMES = [
+    "amount",
+    "amount_log",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "card_velocity_count",
+    "ip_velocity_count",
+    "user_velocity_count",
+    "avs_code_encoded",
+    "cvv_missing",
+    "billing_shipping_country_match",
+    "billing_shipping_zip_match",
+    "is_freight_forwarder",
+    "bin_country_match",
+    "is_vpn",
+    "is_proxy",
+    "is_prepaid_card",
+    "merchant_risk_multiplier",
+    "account_age_days",
+    "chargeback_count_90d",
+    "return_rate",
+    "total_orders",
+    "is_new_account",
+    "amount_vs_user_avg_ratio",
+    "is_micro_transaction",
+]
+
+VALID_FLAGS = [
+    "hard_block_card_testing",
+    "hard_block_extreme_velocity",
+    "hard_block_freight_forwarder",
+    "hard_block_cvv_and_avs_fail",
+    "card_velocity_elevated",
+    "ip_velocity_elevated",
+    "user_velocity_elevated",
+    "bin_country_mismatch",
+    "bin_prepaid_high_value",
+    "bin_lookup_failed",
+    "avs_no_match",
+    "avs_partial_match",
+    "cvv_missing_or_failed",
+    "address_country_mismatch",
+    "address_city_mismatch",
+    "high_risk_merchant_category",
+    "chargeback_history_detected",
+    "high_return_rate",
+    "new_account_high_value",
+    "vpn_detected",
+    "amount_spike_detected",
+    "ml_model_unavailable",
+    "agent_error",
+]
+
+
+# ── Existing detection functions (kept for backward compatibility) ────────────
 
 async def _get_recent_txns(**filters) -> list:
     async with async_session() as session:

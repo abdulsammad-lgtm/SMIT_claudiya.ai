@@ -39,6 +39,17 @@ class TransactionIn(BaseModel):
     user_agent: str
     session_duration_seconds: float
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
+    card_bin: str = ""
+    card_last4: str = ""
+    cvv_provided: bool = False
+    avs_result: str = "U"
+    billing_address: str = ""
+    billing_country: str = ""
+    billing_zip: str = ""
+    shipping_country: str = ""
+    shipping_zip: str = ""
+    merchant_id: str = ""
+    merchant_category: str = "default"
 
 
 class TransactionDecision(BaseModel):
